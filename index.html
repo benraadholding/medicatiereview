@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicatiereview STRIP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .step { display: none; }
+        .step.active { display: block; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spinner { animation: spin 1s linear infinite; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-4 md:p-6">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <h1 class="text-3xl font-bold text-gray-800">⚡ Medicatiereview STRIP</h1>
+                <p class="text-gray-600 mt-2">Professionele medicatiebeoordeling</p>
+                <div class="mt-4">
+                    <div class="flex justify-between text-xs text-gray-600 mb-1">
+                        <span id="progressText">Stap 0 van 9</span>
+                        <span id="progressPercent">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div id="progressBar" class="bg-blue-600 h-2 rounded-full transition-all" style="width:0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg p-6 md:p-8">
+                <div id="step0" class="step active">
+                    <h2 class="text-2xl font-bold mb-4">🆔 PATID</h2>
+                    <input type="text" id="patid" class="w-full px-4 py-3 border-2 rounded-lg text-lg focus:border-blue-500" placeholder="PATID (optioneel)">
+                    <button onclick="next()" class="mt-6 w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700">Start →</button>
+                </div>
+
+                <div id="step1" class="step">
+                    <h2 class="text-2xl font-bold mb-4">Leeftijd</h2>
+                    <input type="number" id="age" min="0" max="120" class="w-full px-4 py-3 border-2 rounded-lg" placeholder="Jaren">
+                    <div class="mt-6 flex gap-4">
+                        <button onclick="prev()" class="flex-1 bg-gray-200 px-6 py-3 rounded-lg">← Terug</button>
+                        <button onclick="next()" class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg">Volgende →</button>
+                    </div>
+                </div>
+
+                <div id="step2" class="step">
+                    <h2 class="text-2xl font-bold mb-4">Geslacht</h2>
+                    <div class="space-y-3">
+                        <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50">
+                            <input type="radio" name="gender" value="Man" class="w-5 h-5">
+                            <span class="ml-3 text-lg">Man</span>
+                        </label>
+                        <label class="flex items-center p-4 border-2 rounded-lg cursor-pointer hover:bg-gray-50">
+                            <input type="radio" name="gender" value="Vrouw" class="w-5 h-5">
+                            <span class="ml-3 text-lg">Vrouw</span>
+                        </label>
+                    </div>
+                    <div class="mt-6 flex gap-4">
+                        <button onclick="prev()" class="flex-1 bg-gray-200 px-6 py-3 rounded-lg">← Terug</button>
+                        <button onclick="next()" class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg">Volgende →</button>
+                    </div>
+                </div>
+
+                <div id="step3" class="step">
+                    <h2 class="text-2xl font-bold mb-4">Gewicht (kg)</h2>
+                    <input type="number" id="weight" step="0.1" class="w-full px-4 py-3 border-2 rounded-lg" placeholder="Kg">
+                    <div class="mt-6 flex gap-4">
+                        <button onclick="prev()" class="flex-1 bg-gray-200 px-6 py-3 rounded-lg">← Terug</button>
+                        <button onclick="next()" class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg">Volgende →</button>
+                    </div>
+                </div>
+
+                <div id="step4" class="step">
+                    <h2 class="text-2xl font-bold mb-4">eGFR</h2>
+                    <input type="number" id="egfr" class="w-full px-4 py-3 border-2 rounded-lg" placeholder="ml/min/1.73m²">
+                    <div id="egfrW" class="hidden mt-4 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded"></div>
+                    <div class="mt-6 flex gap-4">
+                        <button onclick="prev()" class="flex-1 bg-gray-200 px-6 py-3 rounded-lg">← Terug</button>
+                        <button onclick="next()" class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg">Volgende →</button>
+                    </div>
+                </div>
+
+                <div id="step5" class="step">
+                    <h2 class="text-2xl font-bold mb-4">Allergieën</h2>
+                    <textarea id="allergies" rows="3" class="w-full px-4 py-3 border-2 rounded-lg" placeholder="Bekende allergieën"></textarea>
+                    <div class="mt-6 flex gap-4">
+                        <button onclick="prev()" class="flex-1 bg-gray-200 px-6 py-3 rounded-lg">← Terug</button>
+                        <button onclick="next()" class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg">Volgende →</button>
+                    </div>
+                </div>
+
+                <div id="step6" class="step">
+                    <h2 class="text-2xl font-bold mb-4">Aandoeningen</h2>
+                    <div class="space-y-2 max-h-80 overflow-y-auto">
+                        <label class="flex items-center p-2 hover:bg-gray-50 rounded cursor-pointer">
+                            <input type="checkbox" value="Hypertensie" class="cond w-4 h-4">
+                            <span class="ml-2">Hypertensie</span>
+                        </label>
+                        <label class="flex items-center p-2 hover:bg-gray-50 rounded cursor-pointer">
+                            <input type="checkbox" value="Diabetes type 2" class="cond w-4 h-4">
+                            <span class="ml-2">Diabetes type 2</span>
+                        </label>
+                        <label class="flex items-center p-2 hover:bg-gray-50 rounded cursor-pointer">
+                            <input type="checkbox" value="Hypercholesterolemie" class="cond w-4 h-4">
+                            <span class="ml-2">Hypercholesterolemie</span>
+                        </label>
+                        <label class="flex items-center p-2 hover:bg-gray-50 rounded cursor-pointer">
+                            <input type="checkbox" value="Hartfalen" class="cond w-4 h-4">
+                            <span class="ml-2">Hartfalen</span>
+                        </label>
+                        <input type="text" id="otherC" class="w-full px-3 py-2 border rounded mt-3" placeholder="Andere">
+                    </div>
+                    <div class="mt-6 flex gap-4">
+                        <button onclick="prev()" class="flex-1 bg-gray-200 px-6 py-3 rounded-lg">← Terug</button>
+                        <button onclick="next()" class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg">Volgende →</button>
+                    </div>
+                </div>
+
+                <div id="step7" class="step">
+                    <h2 class="text-2xl font-bold mb-4">Medicatielijst</h2>
+                    <textarea id="meds" rows="8" class="w-full px-4 py-3 border-2 rounded-lg font-mono" placeholder="- Metformine 850mg 2dd1&#10;- Perindopril 4mg 1dd1"></textarea>
+                    <div class="mt-6 flex gap-4">
+                        <button onclick="prev()" class="flex-1 bg-gray-200 px-6 py-3 rounded-lg">← Terug</button>
+                        <button onclick="next()" class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg">Volgende →</button>
+                    </div>
+                </div>
+
+                <div id="step8" class="step">
+                    <h2 class="text-2xl font-bold mb-4">Klachten</h2>
+                    <textarea id="compl" rows="4" class="w-full px-4 py-3 border-2 rounded-lg" placeholder="Klachten of bijwerkingen"></textarea>
+                    <div class="mt-6 flex gap-4">
+                        <button onclick="prev()" class="flex-1 bg-gray-200 px-6 py-3 rounded-lg">← Terug</button>
+                        <button onclick="showSum()" class="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg">Samenvatting →</button>
+                    </div>
+                </div>
+
+                <div id="step9" class="step">
+                    <h2 class="text-2xl font-bold mb-4">✓ Controleer</h2>
+                    <div class="bg-blue-50 border-l-4 border-blue-600 p-6 rounded mb-6">
+                        <pre id="sumT" class="text-sm whitespace-pre-wrap font-mono"></pre>
+                    </div>
+                    <div class="flex gap-4">
+                        <button onclick="prev()" class="flex-1 bg-gray-200 px-6 py-3 rounded-lg">← Aanpassen</button>
+                        <button onclick="analyze()" class="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg">✓ Start</button>
+                    </div>
+                </div>
+
+                <div id="stepA" class="step">
+                    <div id="load" class="text-center py-12">
+                        <div class="inline-block spinner rounded-full h-16 w-16 border-4 border-blue-600 border-t-transparent mb-4"></div>
+                        <p class="text-lg font-medium">Analyse loopt...</p>
+                        <p class="text-sm text-gray-500 mt-2">30-60 seconden</p>
+                    </div>
+                    
+                    <div id="res" class="hidden">
+                        <h2 class="text-2xl font-bold text-green-700 mb-4">✓ Compleet</h2>
+                        <div class="bg-blue-50 border-l-4 border-blue-600 p-4 rounded mb-6">
+                            <pre id="resS" class="text-xs whitespace-pre-wrap font-mono"></pre>
+                        </div>
+                        <div class="bg-white border-2 rounded-lg p-6 mb-6">
+                            <pre id="resA" class="whitespace-pre-wrap text-sm"></pre>
+                        </div>
+                        <div class="flex gap-4">
+                            <button onclick="downloadPDF()" class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg">📄 PDF</button>
+                            <button onclick="location.reload()" class="flex-1 bg-gray-200 px-6 py-3 rounded-lg">🔄 Nieuw</button>
+                        </div>
+                    </div>
+
+                    <div id="err" class="hidden">
+                        <div class="bg-red-50 border-l-4 border-red-600 p-6 rounded mb-6">
+                            <h3 class="font-bold text-red-900 mb-2">⚠️ Fout</h3>
+                            <p id="errM" class="text-red-800"></p>
+                        </div>
+                        <button onclick="analyze()" class="bg-red-600 text-white px-6 py-3 rounded-lg">Opnieuw</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let step=0,data={};
+        function updateProg(){const p=Math.round((step/9)*100);document.getElementById('progressText').textContent=`Stap ${step} van 9`;document.getElementById('progressPercent').textContent=`${p}%`;document.getElementById('progressBar').style.width=`${p}%`;}
+        function next(){if(step===1&&!document.getElementById('age').value){alert('Voer leeftijd in');return;}if(step===2&&!document.querySelector('input[name="gender"]:checked')){alert('Selecteer geslacht');return;}if(step===7&&!document.getElementById('meds').value.trim()){alert('Voer medicatie in');return;}if(step===4){const e=parseInt(document.getElementById('egfr').value);const w=document.getElementById('egfrW');if(e&&e<60){let s=e>=45?'3a':e>=30?'3b':e>=15?'4':'5';w.textContent=`⚠️ eGFR ${e} = Stadium ${s}`;w.classList.remove('hidden');}}document.getElementById(`step${step}`).classList.remove('active');step++;document.getElementById(`step${step}`).classList.add('active');updateProg();window.scrollTo(0,0);}
+        function prev(){document.getElementById(`step${step}`).classList.remove('active');step--;document.getElementById(`step${step}`).classList.add('active');updateProg();window.scrollTo(0,0);}
+        function showSum(){data={patid:document.getElementById('patid').value||'Niet opgegeven',age:document.getElementById('age').value,gender:document.querySelector('input[name="gender"]:checked')?.value||'Onbekend',weight:document.getElementById('weight').value||'Onbekend',egfr:document.getElementById('egfr').value||'Onbekend',allergies:document.getElementById('allergies').value||'Geen',cond:Array.from(document.querySelectorAll('.cond:checked')).map(c=>c.value),otherC:document.getElementById('otherC').value,meds:document.getElementById('meds').value,compl:document.getElementById('compl').value||'Geen'};let s=`MEDICATIEREVIEW - STRIP\n${'='.repeat(50)}\nPATID: ${data.patid}\nDatum: ${new Date().toLocaleDateString('nl-NL')}\n\nPATIËNT:\n• Leeftijd: ${data.age} jaar\n• Geslacht: ${data.gender}\n• Gewicht: ${data.weight} kg\n• eGFR: ${data.egfr}\n\nAANDOENINGEN:\n`;if(data.cond.length)data.cond.forEach(c=>s+=`• ${c}\n`);if(data.otherC)s+=`• ${data.otherC}\n`;if(!data.cond.length&&!data.otherC)s+=`Geen\n`;s+=`\nALLERGIEËN: ${data.allergies}\n\nMEDICATIE:\n${data.meds}\n\nKLACHTEN:\n${data.compl}`;document.getElementById('sumT').textContent=s;document.getElementById('step8').classList.remove('active');step=9;document.getElementById('step9').classList.add('active');updateProg();}
+        async function analyze(){document.getElementById('step9').classList.remove('active');document.getElementById('stepA').classList.add('active');document.getElementById('load').classList.remove('hidden');document.getElementById('res').classList.add('hidden');document.getElementById('err').classList.add('hidden');const sum=document.getElementById('sumT').textContent;try{const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:`Medicatiereview STRIP:\n\n${sum}\n\nGeef analyse met aanbevelingen. Nederlands + bronnen (KNMP, NHG).`})});if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.error||`Error: ${r.status}`);}const res=await r.json();document.getElementById('load').classList.add('hidden');document.getElementById('res').classList.remove('hidden');document.getElementById('resS').textContent=sum;document.getElementById('resA').textContent=res.response;window.analysisData={summary:sum,analysis:res.response};}catch(e){console.error(e);document.getElementById('load').classList.add('hidden');document.getElementById('err').classList.remove('hidden');document.getElementById('errM').textContent=e.message;}}
+        function downloadPDF(){const{summary,analysis}=window.analysisData;const c=`${summary}\n\n${'='.repeat(50)}\n\nANALYSE:\n\n${analysis}`;const w=window.open('','_blank');w.document.write(`<html><head><title>Review ${data.patid}</title><style>body{font-family:Arial;font-size:11pt;padding:20mm;max-width:210mm;margin:0 auto}h1{text-align:center;border-bottom:2px solid #333;padding-bottom:10px}pre{white-space:pre-wrap;font-family:'Courier New';background:#f5f5f5;padding:10px}</style></head><body><h1>MEDICATIEREVIEW STRIP</h1><p><b>PATID:</b> ${data.patid} | <b>Datum:</b> ${new Date().toLocaleDateString('nl-NL')}</p><pre>${c}</pre><hr><p style="font-size:9pt;color:#666">Advies ter ondersteuning. Eindverantwoordelijkheid bij arts en apotheker.</p></body></html>`);w.document.close();setTimeout(()=>w.print(),250);}
+        updateProg();
+    </script>
+</body>
+</html>
